@@ -209,7 +209,7 @@ jobs:
             -H "ACCEPT: application/json" \
             -H "Content-Type: application/json" \
             -H "Authorization: Token ${{ secrets.TPS_TOKEN }}" \
-            -d '{"lock": {"sha": "${{ github.sha }}", "component_name": "${{ vars.tps_component }}"}}' \
+            -d '{"lock": {"sha": "${{ github.sha }}", "component_slug": "${{ vars.tps_component }}"}}' \
             "${{ secrets.TPS_CTC_API_URL }}"
 
   promote-tags:
@@ -240,7 +240,7 @@ jobs:
         with:
           registry-type: public
       - name: Install crane
-        uses: buildpacks/github-actions/setup-tools@v5.7.4
+        uses: buildpacks/github-actions/setup-tools@v5.8.8
       - name: Promote images to stable tag
         run: |
           destTags=( )

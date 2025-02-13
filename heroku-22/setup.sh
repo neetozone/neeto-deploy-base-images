@@ -32,6 +32,7 @@ packages=(
   apt-utils
   bind9-host
   bzip2
+  ca-certificates
   coreutils
   curl
   dnsutils
@@ -82,13 +83,16 @@ packages=(
   libharfbuzz-gobject0
   libharfbuzz-icu0
   libharfbuzz0b
+  libhashkit2
   libheif1
   liblzf1
   libmagickcore-6.q16-3-extra
   libmcrypt4
   libmemcached11
+  libmemcachedutil2
   libmp3lame0
   libmysqlclient21
+  libnetpbm10
   libnuma1
   libogg0
   libonig5
@@ -120,6 +124,7 @@ packages=(
   libwebp7
   libwebpdemux2
   libwebpmux3
+  libwmf-0.2-7
   libx264-163
   libx265-199
   libxcb-render0
@@ -161,6 +166,14 @@ packages=(
 apt-get install -y --no-install-recommends "${packages[@]}"
 
 cp /build/imagemagick-policy.xml /etc/ImageMagick-6/policy.xml
+
+# Install AWS RDS global CA bundle (https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html#UsingWithRDS.SSL.CertificatesAllRegions)
+mkdir -p /usr/local/share/ca-certificates/rds-ca-certs
+awk '
+  split_after == 1 {n++;split_after=0}
+  /-----END CERTIFICATE-----/ {split_after=1}
+  {print > "/usr/local/share/ca-certificates/rds-ca-certs/rds-ca" n ".crt"}' < /build/rds-global-bundle.pem
+update-ca-certificates
 
 # Install ca-certificates-java so that the JVM buildpacks can configure Java apps to use the Java certs
 # store in the base image instead of the one that ships in each JRE release, allowing certs to be updated
