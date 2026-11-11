@@ -1,6 +1,31 @@
+# Version updates are off (open-pull-requests-limit: 0), so only security updates open PRs.
+# Security fixes found together arrive as one grouped PR, major bumps included.
 version: 2
 updates:
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: docker
+    directories:
+      - "/heroku-20"
+      - "/heroku-20-build"
+      - "/heroku-20-cnb"
+      - "/heroku-20-cnb-build"
+      - "/heroku-22"
+      - "/heroku-22-build"
+      - "/heroku-22-cnb"
+      - "/heroku-22-cnb-build"
+      - "/heroku-24"
+      - "/heroku-24-build"
+      - "/tools"
+    # Dependabot requires a schedule. It has no effect while open-pull-requests-limit is 0,
+    # and security updates ignore it.
     schedule:
-      interval: "monthly"
+      interval: weekly
+    open-pull-requests-limit: 0
+    groups:
+      security-updates:
+        applies-to: security-updates
+        patterns:
+          - "*"
+        update-types:
+          - major
+          - minor
+          - patch
